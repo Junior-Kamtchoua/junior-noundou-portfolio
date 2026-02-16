@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 
 export default function Certifications() {
   const certs = [
-    { name: "AWS Certified Developer", img: "/images/aws.png" },
-    { name: "Meta Full-Stack Developer", img: "/images/meta.png" },
-    { name: "IBM Full-Stack JavaScript", img: "/images/ibm.png" },
-    { name: "Microsoft Python Developer", img: "/images/microsoft.png" },
+    { name: "AWS Certified Developer", img: "/images/aws.PNG" },
+    { name: "Meta Full-Stack Developer", img: "/images/meta.PNG" },
+    { name: "IBM Full-Stack JavaScript", img: "/images/ibm.PNG" },
+    { name: "Microsoft Python Developer", img: "/images/microsoft.PNG" },
   ];
 
   return (
