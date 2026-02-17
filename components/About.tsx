@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 
 export default function About() {
   return (
-    <section id="about" className="py-20 px-6 md:px-20 bg-white">
-      {/* Animated Title */}
+    <section id="about" className="about-section">
+      {/* Title */}
       <motion.h2
-        className="text-4xl md:text-5xl font-extrabold mb-12 text-center text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500"
+        className="about-title"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -15,58 +15,53 @@ export default function About() {
         About Me
       </motion.h2>
 
-      {/* Animated Content */}
-      <motion.div
-        className="max-w-4xl mx-auto text-gray-700 text-lg leading-relaxed space-y-6"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.3 } },
-        }}
-      >
-        <motion.p
-          className="text-gray-700"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          Full-Stack developer with{" "}
-          <span className="font-semibold text-indigo-600">
-            3+ years of experience
-          </span>{" "}
-          building SaaS applications. Strong expertise in authentication
-          systems, role-based access control, scalable backend architecture, and
-          AWS cloud deployment.
-        </motion.p>
+      <div className="about-container">
+        {/* LEFT SIDE - TEXT */}
 
-        <motion.p
-          className="text-gray-700"
-          initial={{ opacity: 0, x: -30 }}
+        {/* RIGHT SIDE - 3D ROTATING IMAGE */}
+        <motion.div
+          className="about-visual"
+          initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 1 }}
         >
-          I design{" "}
-          <span className="text-indigo-500 font-medium">
-            production-ready applications
-          </span>{" "}
-          with performance, security, and maintainability in mind. Passionate
-          about clean architecture, system design, and solving real-world
-          business problems.
-        </motion.p>
+          <div className="image-3d-container">
+            <img src="/profile.jpg" alt="3D profile" className="image-3d" />
+          </div>
+        </motion.div>
 
-        <motion.p
-          className="text-gray-700"
-          initial={{ opacity: 0, x: -30 }}
+        <motion.div
+          className="about-text"
+          initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 1 }}
         >
-          I constantly explore{" "}
-          <span className="text-blue-400 font-semibold">new technologies</span>
-          and best practices to deliver high-quality, scalable, and efficient
-          SaaS solutions.
-        </motion.p>
-      </motion.div>
+          <p>
+            Full-Stack developer with{" "}
+            <span className="highlight">3+ years of experience</span> building
+            SaaS applications. Strong expertise in authentication systems,
+            role-based access control, scalable backend architecture, and AWS
+            cloud deployment.
+          </p>
+
+          <p>
+            I design{" "}
+            <span className="highlight-secondary">
+              production-ready applications
+            </span>{" "}
+            with performance, security, and maintainability in mind. Passionate
+            about clean architecture, system design, and solving real-world
+            business problems.
+          </p>
+
+          <p>
+            I constantly explore{" "}
+            <span className="highlight-blue">new technologies</span> and best
+            practices to deliver high-quality, scalable, and efficient SaaS
+            solutions.
+          </p>
+        </motion.div>
+      </div>
     </section>
   );
 }

@@ -9,6 +9,7 @@ export default function Projects() {
       description: "track analyze and manage personal and business expenses",
       live: "https://saas-smart-expenses-tracker.vercel.app/",
       github: "https://github.com/Junior-Kamtchoua/Saas-Smart-Expenses-Tracker",
+      video: "/videos/expense.mp4",
     },
     {
       title: "Subscription Billing Platform Saas",
@@ -17,6 +18,7 @@ export default function Projects() {
       live: "https://saas-subscription-billing-platform.vercel.app/",
       github:
         "https://github.com/Junior-Kamtchoua/saas-subscription-billing-platform",
+      video: "/videos/subscription.mp4",
     },
     {
       title: "Workflow File Management B2B",
@@ -24,6 +26,7 @@ export default function Projects() {
         "organize access and share your documents effortlessly in a single workflow",
       live: "https://webflow-frontend.vercel.app/",
       github: "https://github.com/Junior-Kamtchoua/Webflow-File-Management",
+      video: "/videos/workflow.mp4",
     },
     {
       title: "Health Appointment Booking System",
@@ -32,13 +35,14 @@ export default function Projects() {
       live: "https://mvp-health-appointment-system.vercel.app/",
       github:
         "https://github.com/Junior-Kamtchoua/MVP-health-appointment-system",
+      video: "/videos/health.mp4",
     },
   ];
 
   return (
-    <section id="projects" className="py-20 px-6 md:px-20 bg-slate-50">
+    <section id="projects" className="projects-section">
       <motion.h2
-        className="text-4xl md:text-5xl font-bold mb-12 text-center text-slate-900"
+        className="projects-title"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -46,37 +50,42 @@ export default function Projects() {
         Projects
       </motion.h2>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="projects-grid">
         {projects.map((project, index) => (
           <motion.div
             key={index}
-            className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 duration-300"
+            className="project-card"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: index * 0.2 }}
           >
-            <h3 className="text-xl font-semibold mb-4 text-indigo-600">
-              {project.title}
-            </h3>
+            {/* Background Video */}
+            <video
+              className="project-video"
+              src={project.video}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
 
-            <p className="text-gray-600 mb-6">{project.description}</p>
+            {/* Dark Overlay */}
+            <div className="project-overlay"></div>
 
-            <div className="flex gap-4">
-              <a
-                href={project.live}
-                target="_blank"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 hover:scale-105 transition-transform duration-300"
-              >
-                Live Demo
-              </a>
+            {/* Content */}
+            <div className="project-content">
+              <h3>{project.title}</h3>
+              <p>{project.description}</p>
 
-              <a
-                href={project.github}
-                target="_blank"
-                className="bg-gray-200 px-4 py-2 rounded-lg shadow hover:bg-gray-300 hover:scale-105 transition-transform duration-300"
-              >
-                GitHub
-              </a>
+              <div className="project-buttons">
+                <a href={project.live} target="_blank">
+                  Live Demo
+                </a>
+
+                <a href={project.github} target="_blank" className="github-btn">
+                  GitHub
+                </a>
+              </div>
             </div>
           </motion.div>
         ))}
