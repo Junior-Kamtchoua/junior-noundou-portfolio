@@ -1,67 +1,108 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-type DataPoint = {
-  label: string;
+type WeeklyPoint = {
+  day: string;
   bookings: number;
   revenue: number;
+};
+
+type PiePoint = {
+  name: string;
+  value: number;
 };
 
 function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateInitialData(): DataPoint[] {
+function createWeeklyData(): WeeklyPoint[] {
   return [
-    { label: "Mon", bookings: 18, revenue: 2400 },
-    { label: "Tue", bookings: 24, revenue: 3100 },
-    { label: "Wed", bookings: 21, revenue: 2800 },
-    { label: "Thu", bookings: 29, revenue: 3900 },
-    { label: "Fri", bookings: 34, revenue: 4700 },
-    { label: "Sat", bookings: 27, revenue: 3600 },
-    { label: "Sun", bookings: 19, revenue: 2500 },
+    { day: "Mon", bookings: 18, revenue: 2400 },
+    { day: "Tue", bookings: 23, revenue: 3100 },
+    { day: "Wed", bookings: 20, revenue: 2800 },
+    { day: "Thu", bookings: 28, revenue: 3900 },
+    { day: "Fri", bookings: 34, revenue: 4700 },
+    { day: "Sat", bookings: 26, revenue: 3600 },
+    { day: "Sun", bookings: 17, revenue: 2500 },
   ];
 }
 
+function createRevenueSplit(): PiePoint[] {
+  return [
+    { name: "Completed", value: 62 },
+    { name: "In Transit", value: 24 },
+    { name: "Escrow", value: 14 },
+  ];
+}
+
+const PIE_COLORS = ["#fb923c", "#60a5fa", "#34d399"];
+
 export default function HeavyMoveLiveStats() {
-  const [data, setData] = useState<DataPoint[]>(generateInitialData());
-  const [activeIndex, setActiveIndex] = useState(4);
+  const [weeklyData, setWeeklyData] =
+    useState<WeeklyPoint[]>(createWeeklyData());
+  const [revenueSplit, setRevenueSplit] =
+    useState<PiePoint[]>(createRevenueSplit());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setData((prev) => {
-        const next = prev.map((item) => ({
+      setWeeklyData((prev) =>
+        prev.map((item) => ({
           ...item,
           bookings: Math.max(8, item.bookings + randomBetween(-4, 5)),
-          revenue: Math.max(1200, item.revenue + randomBetween(-500, 700)),
-        }));
+          revenue: Math.max(1000, item.revenue + randomBetween(-500, 700)),
+        })),
+      );
 
-        setActiveIndex(randomBetween(0, next.length - 1));
-        return next;
-      });
+      const completed = randomBetween(50, 70);
+      const inTransit = randomBetween(18, 30);
+      const escrow = Math.max(8, 100 - completed - inTransit);
+
+      setRevenueSplit([
+        { name: "Completed", value: completed },
+        { name: "In Transit", value: inTransit },
+        { name: "Escrow", value: escrow },
+      ]);
     }, 1800);
 
     return () => clearInterval(interval);
   }, []);
 
-  const maxBookings = useMemo(
-    () => Math.max(...data.map((d) => d.bookings)),
-    [data],
+  const totalRevenue = useMemo(
+    () => weeklyData.reduce((sum, item) => sum + item.revenue, 0),
+    [weeklyData],
   );
 
-  const maxRevenue = useMemo(
-    () => Math.max(...data.map((d) => d.revenue)),
-    [data],
+  const totalBookings = useMemo(
+    () => weeklyData.reduce((sum, item) => sum + item.bookings, 0),
+    [weeklyData],
   );
 
-  const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
-  const totalBookings = data.reduce((sum, item) => sum + item.bookings, 0);
-  const avgOrderValue = Math.round(totalRevenue / totalBookings);
+  const avgOrderValue = useMemo(() => {
+    if (!totalBookings) return 0;
+    return Math.round(totalRevenue / totalBookings);
+  }, [totalRevenue, totalBookings]);
+
+  const activeDrivers = useMemo(() => randomBetween(42, 68), [weeklyData]);
 
   return (
     <div className="h-full rounded-2xl border border-white/10 bg-slate-950/70 p-3">
-      <div className="h-full rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,0.96))] p-4 md:p-5">
+      <div className="h-full rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.97),rgba(2,6,23,0.98))] p-4 md:p-5">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">
@@ -78,166 +119,234 @@ export default function HeavyMoveLiveStats() {
           </div>
         </div>
 
-        {/* KPI cards */}
-        <div className="mb-5 grid grid-cols-3 gap-3">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Weekly Revenue
-            </p>
-            <p className="mt-2 text-lg font-bold text-white">
-              ${totalRevenue.toLocaleString()}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Total Bookings
-            </p>
-            <p className="mt-2 text-lg font-bold text-white">{totalBookings}</p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Avg Order Value
-            </p>
-            <p className="mt-2 text-lg font-bold text-white">
-              ${avgOrderValue}
-            </p>
-          </div>
+        <div className="mb-5 grid grid-cols-2 gap-3 xl:grid-cols-4">
+          <MetricCard
+            label="Weekly Revenue"
+            value={`$${totalRevenue.toLocaleString()}`}
+          />
+          <MetricCard label="Total Bookings" value={String(totalBookings)} />
+          <MetricCard label="Avg Order Value" value={`$${avgOrderValue}`} />
+          <MetricCard label="Active Drivers" value={String(activeDrivers)} />
         </div>
 
-        {/* Bar chart */}
-        <div className="mb-5 rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm font-semibold text-white">Bookings Per Day</p>
-            <p className="text-xs text-slate-400">Auto-updating fake data</p>
+        <div className="grid h-[calc(100%-124px)] gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+          <div className="grid gap-4">
+            <ChartCard
+              title="Revenue Trend"
+              subtitle="7-day simulated revenue"
+              className="min-h-[220px]"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={weeklyData}>
+                  <defs>
+                    <linearGradient
+                      id="revenueFill"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stopColor="#60a5fa"
+                        stopOpacity={0.45}
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor="#60a5fa"
+                        stopOpacity={0.02}
+                      />
+                    </linearGradient>
+                  </defs>
+
+                  <CartesianGrid
+                    stroke="rgba(255,255,255,0.06)"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="day"
+                    tick={{ fill: "#94a3b8", fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fill: "#94a3b8", fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={40}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "rgba(15,23,42,0.95)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: "14px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#60a5fa"
+                    strokeWidth={3}
+                    fill="url(#revenueFill)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            <ChartCard
+              title="Bookings Per Day"
+              subtitle="Auto-changing fake activity"
+              className="min-h-[200px]"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={weeklyData} barCategoryGap="22%">
+                  <CartesianGrid
+                    stroke="rgba(255,255,255,0.05)"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="day"
+                    tick={{ fill: "#94a3b8", fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fill: "#94a3b8", fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={34}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "rgba(15,23,42,0.95)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: "14px",
+                      color: "#fff",
+                    }}
+                  />
+                  <Bar dataKey="bookings" radius={[10, 10, 0, 0]}>
+                    {weeklyData.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={index % 2 === 0 ? "#fb923c" : "#60a5fa"}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
           </div>
 
-          <div className="flex h-52 items-end gap-3">
-            {data.map((item, index) => {
-              const height = `${(item.bookings / maxBookings) * 100}%`;
-              const isActive = index === activeIndex;
-
-              return (
-                <div
-                  key={item.label}
-                  className="flex flex-1 flex-col items-center justify-end gap-2"
-                >
-                  <div className="flex h-full w-full items-end">
-                    <div
-                      className={`w-full rounded-t-xl transition-all duration-1000 ${
-                        isActive
-                          ? "bg-gradient-to-t from-orange-500 via-amber-400 to-yellow-300 shadow-[0_0_30px_rgba(251,146,60,0.35)]"
-                          : "bg-gradient-to-t from-blue-600 via-cyan-400 to-sky-300"
-                      }`}
-                      style={{ height }}
-                      title={`${item.bookings} bookings`}
+          <ChartCard
+            title="Delivery Flow Split"
+            subtitle="Current marketplace status"
+            className="min-h-[430px]"
+          >
+            <div className="flex h-full flex-col justify-between">
+              <div className="h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={revenueSplit}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={58}
+                      outerRadius={92}
+                      paddingAngle={4}
+                    >
+                      {revenueSplit.map((entry, index) => (
+                        <Cell
+                          key={`pie-${entry.name}`}
+                          fill={PIE_COLORS[index % PIE_COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        background: "rgba(15,23,42,0.95)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: "14px",
+                        color: "#fff",
+                      }}
                     />
-                  </div>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
 
-                  <div className="text-center">
-                    <p className="text-xs font-semibold text-white">
-                      {item.bookings}
-                    </p>
-                    <p className="text-[11px] text-slate-400">{item.label}</p>
+              <div className="space-y-3">
+                {revenueSplit.map((item, index) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="h-3.5 w-3.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            PIE_COLORS[index % PIE_COLORS.length],
+                        }}
+                      />
+                      <span className="text-sm text-slate-200">
+                        {item.name}
+                      </span>
+                    </div>
+                    <span className="text-sm font-semibold text-white">
+                      {item.value}%
+                    </span>
                   </div>
+                ))}
+
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                    Marketplace Signal
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-200">
+                    Simulated data updates continuously to make the flagship
+                    project section feel alive and product-driven.
+                  </p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Revenue line-style graph */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm font-semibold text-white">Revenue Trend</p>
-            <p className="text-xs text-slate-400">7-day simulation</p>
-          </div>
-
-          <div className="relative h-40">
-            <svg viewBox="0 0 700 200" className="h-full w-full">
-              {/* grid lines */}
-              {[0, 1, 2, 3].map((i) => (
-                <line
-                  key={i}
-                  x1="0"
-                  y1={30 + i * 40}
-                  x2="700"
-                  y2={30 + i * 40}
-                  stroke="rgba(255,255,255,0.08)"
-                  strokeWidth="1"
-                />
-              ))}
-
-              {/* area */}
-              <path
-                d={buildAreaPath(data, maxRevenue)}
-                fill="rgba(59,130,246,0.18)"
-              />
-
-              {/* line */}
-              <path
-                d={buildLinePath(data, maxRevenue)}
-                fill="none"
-                stroke="rgba(96,165,250,1)"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              {/* points */}
-              {data.map((item, index) => {
-                const x = (index / (data.length - 1)) * 640 + 30;
-                const y = 170 - (item.revenue / maxRevenue) * 120;
-
-                return (
-                  <g key={item.label}>
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r={index === activeIndex ? 7 : 5}
-                      fill={index === activeIndex ? "#fb923c" : "#93c5fd"}
-                    />
-                  </g>
-                );
-              })}
-            </svg>
-
-            <div className="mt-2 flex justify-between px-1">
-              {data.map((item) => (
-                <span key={item.label} className="text-[11px] text-slate-400">
-                  {item.label}
-                </span>
-              ))}
+              </div>
             </div>
-          </div>
+          </ChartCard>
         </div>
       </div>
     </div>
   );
 }
 
-function buildLinePath(data: DataPoint[], maxRevenue: number) {
-  return data
-    .map((item, index) => {
-      const x = (index / (data.length - 1)) * 640 + 30;
-      const y = 170 - (item.revenue / maxRevenue) * 120;
-      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
-    })
-    .join(" ");
+function MetricCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+        {label}
+      </p>
+      <p className="mt-2 text-lg font-bold text-white">{value}</p>
+    </div>
+  );
 }
 
-function buildAreaPath(data: DataPoint[], maxRevenue: number) {
-  const line = data
-    .map((item, index) => {
-      const x = (index / (data.length - 1)) * 640 + 30;
-      const y = 170 - (item.revenue / maxRevenue) * 120;
-      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
-    })
-    .join(" ");
-
-  const lastX = 670;
-  const firstX = 30;
-
-  return `${line} L ${lastX} 170 L ${firstX} 170 Z`;
+function ChartCard({
+  title,
+  subtitle,
+  className,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={`rounded-2xl border border-white/10 bg-white/5 p-4 ${className ?? ""}`}
+    >
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-sm font-semibold text-white">{title}</p>
+        <p className="text-xs text-slate-400">{subtitle}</p>
+      </div>
+      <div className="h-[calc(100%-2rem)]">{children}</div>
+    </div>
+  );
 }
