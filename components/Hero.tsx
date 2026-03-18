@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const titles = ["Full-Stack Engineer", "SaaS Architect", "Frontend Developer"];
+const titles = [
+  "Full-Stack Software Developer",
+  "SaaS Application Engineer",
+  "Frontend Developer",
+];
 
 export default function Hero() {
   const [currentTitle, setCurrentTitle] = useState(0);
