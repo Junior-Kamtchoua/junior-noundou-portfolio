@@ -1,3 +1,5 @@
+import HeavyMoveLiveStats from "@/components/HeavyMoveLiveStats";
+
 export default function FeaturedProject() {
   return (
     <section
@@ -164,16 +166,7 @@ export default function FeaturedProject() {
             {/* RIGHT */}
             <div className="flex h-full flex-col gap-5">
               <div className="relative flex-1 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-                <div className="h-full rounded-2xl border border-white/10 bg-slate-950/70 p-3">
-                  <div className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900">
-                    <img
-                      src="/images/heavymove-preview.png"
-                      alt="HeavyMove project preview"
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-                  </div>
-                </div>
+                <HeavyMoveLiveStats />
 
                 <div className="pointer-events-none absolute -right-2 top-6 hidden w-44 rounded-2xl border border-orange-300/20 bg-orange-400/10 p-4 backdrop-blur-md md:block">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-orange-200">
