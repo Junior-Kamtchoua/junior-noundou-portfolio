@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import FeaturedProject from "@/components/FeaturedProject";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
 import SystemDesign from "@/components/SystemDesign";
@@ -11,6 +12,7 @@ export default function Home() {
     <>
       <Navbar />
       <Hero />
+      <FeaturedProject />
       <About />
       <Projects />
       <SystemDesign />
