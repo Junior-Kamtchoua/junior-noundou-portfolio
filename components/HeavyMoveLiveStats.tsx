@@ -53,11 +53,18 @@ function createRevenueSplit(): PiePoint[] {
 
 const PIE_COLORS = ["#fb923c", "#60a5fa", "#34d399"];
 
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export default function HeavyMoveLiveStats() {
   const [weeklyData, setWeeklyData] =
     useState<WeeklyPoint[]>(createWeeklyData());
   const [revenueSplit, setRevenueSplit] =
     useState<PiePoint[]>(createRevenueSplit());
+  const [activeDrivers, setActiveDrivers] = useState(54);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,6 +85,8 @@ export default function HeavyMoveLiveStats() {
         { name: "In Transit", value: inTransit },
         { name: "Escrow", value: escrow },
       ]);
+
+      setActiveDrivers(randomBetween(42, 68));
     }, 1800);
 
     return () => clearInterval(interval);
@@ -97,8 +106,6 @@ export default function HeavyMoveLiveStats() {
     if (!totalBookings) return 0;
     return Math.round(totalRevenue / totalBookings);
   }, [totalRevenue, totalBookings]);
-
-  const activeDrivers = useMemo(() => randomBetween(42, 68), [weeklyData]);
 
   return (
     <div className="h-full rounded-2xl border border-white/10 bg-slate-950/70 p-3">
@@ -122,10 +129,13 @@ export default function HeavyMoveLiveStats() {
         <div className="mb-5 grid grid-cols-2 gap-3 xl:grid-cols-4">
           <MetricCard
             label="Weekly Revenue"
-            value={`$${totalRevenue.toLocaleString()}`}
+            value={`$${formatCurrency(totalRevenue)}`}
           />
           <MetricCard label="Total Bookings" value={String(totalBookings)} />
-          <MetricCard label="Avg Order Value" value={`$${avgOrderValue}`} />
+          <MetricCard
+            label="Avg Order Value"
+            value={`$${formatCurrency(avgOrderValue)}`}
+          />
           <MetricCard label="Active Drivers" value={String(activeDrivers)} />
         </div>
 
@@ -176,6 +186,10 @@ export default function HeavyMoveLiveStats() {
                     width={40}
                   />
                   <Tooltip
+                    formatter={(value: unknown) => {
+                      const val = Number(value ?? 0);
+                      return [`$${formatCurrency(val)}`, "Revenue"];
+                    }}
                     contentStyle={{
                       background: "rgba(15,23,42,0.95)",
                       border: "1px solid rgba(255,255,255,0.08)",
@@ -218,6 +232,10 @@ export default function HeavyMoveLiveStats() {
                     width={34}
                   />
                   <Tooltip
+                    formatter={(value: unknown) => {
+                      const val = Number(value ?? 0);
+                      return [val, "Bookings"];
+                    }}
                     contentStyle={{
                       background: "rgba(15,23,42,0.95)",
                       border: "1px solid rgba(255,255,255,0.08)",
@@ -263,6 +281,10 @@ export default function HeavyMoveLiveStats() {
                       ))}
                     </Pie>
                     <Tooltip
+                      formatter={(value: unknown) => {
+                        const val = Number(value ?? 0);
+                        return [`${val}%`, "Share"];
+                      }}
                       contentStyle={{
                         background: "rgba(15,23,42,0.95)",
                         border: "1px solid rgba(255,255,255,0.08)",
@@ -340,7 +362,9 @@ function ChartCard({
 }) {
   return (
     <div
-      className={`rounded-2xl border border-white/10 bg-white/5 p-4 ${className ?? ""}`}
+      className={`rounded-2xl border border-white/10 bg-white/5 p-4 ${
+        className ?? ""
+      }`}
     >
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-semibold text-white">{title}</p>

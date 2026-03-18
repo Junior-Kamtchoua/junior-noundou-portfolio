@@ -8,7 +8,7 @@ export default function FeaturedProject() {
     >
       {/* Background video */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover brightness-[0.85] contrast-[1.1]"
         src="/videos/heavymove-bg.mp4"
         autoPlay
         muted
@@ -16,17 +16,26 @@ export default function FeaturedProject() {
         playsInline
       />
 
-      {/* Overlays */}
-      <div className="absolute inset-0 bg-slate-950/75" />
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-900/65 to-orange-950/50" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,146,60,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.14),transparent_28%)]" />
+      {/* LIGHTER OVERLAYS */}
+      <div className="absolute inset-0 bg-slate-950/50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950/60 via-slate-900/40 to-orange-950/30" />
+
+      {/* Cinematic radial light */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,146,60,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.12),transparent_35%)]" />
+
+      {/* Vignette (premium cinematic effect) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_60%,rgba(2,6,23,0.6))]" />
 
       {/* Glow */}
       <div className="absolute -left-20 top-10 h-56 w-56 rounded-full bg-orange-500/20 blur-3xl" />
       <div className="absolute -right-20 bottom-10 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
 
+      {/* Bottom fade for smooth transition */}
+      <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-slate-950 to-transparent" />
+
       <div className="relative z-10 flex h-full items-center">
         <div className="mx-auto w-full max-w-[1600px] px-3 md:px-6 lg:px-8">
+          {/* Badge */}
           <div className="mb-4">
             <span className="inline-flex items-center rounded-full border border-orange-400/30 bg-orange-400/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-orange-200 backdrop-blur-md">
               Featured Build · Best Work
@@ -35,8 +44,9 @@ export default function FeaturedProject() {
 
           <div className="grid h-[82vh] gap-5 lg:grid-cols-[1.2fr_0.8fr]">
             {/* LEFT */}
-            <div className="flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/8 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl md:p-7">
+            <div className="flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/10 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl md:p-7">
               <div>
+                {/* Tags */}
                 <div className="mb-4 flex flex-wrap items-center gap-3">
                   <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-medium text-emerald-200">
                     Marketplace Platform
@@ -49,10 +59,12 @@ export default function FeaturedProject() {
                   </span>
                 </div>
 
+                {/* Title */}
                 <h2 className="max-w-4xl text-2xl font-bold leading-tight text-white md:text-4xl xl:text-5xl">
                   HeavyMove — Freight Transport Marketplace
                 </h2>
 
+                {/* Description */}
                 <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-200 md:text-base">
                   A full-stack Uber-style freight marketplace connecting
                   customers with freight drivers for heavy cargo transportation.
@@ -61,8 +73,9 @@ export default function FeaturedProject() {
                   admin financial control.
                 </p>
 
+                {/* Info cards */}
                 <div className="mt-5 grid gap-3 md:grid-cols-3">
-                  <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                  <div className="rounded-2xl border border-white/10 bg-black/30 p-3">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
                       Roles
                     </p>
@@ -71,7 +84,7 @@ export default function FeaturedProject() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                  <div className="rounded-2xl border border-white/10 bg-black/30 p-3">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
                       Payments
                     </p>
@@ -80,7 +93,7 @@ export default function FeaturedProject() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                  <div className="rounded-2xl border border-white/10 bg-black/30 p-3">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">
                       Pricing Engine
                     </p>
@@ -90,6 +103,7 @@ export default function FeaturedProject() {
                   </div>
                 </div>
 
+                {/* Buttons */}
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a
                     href="https://heavy-move.vercel.app"
@@ -121,22 +135,21 @@ export default function FeaturedProject() {
                 </div>
               </div>
 
+              {/* Bottom sections */}
               <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <div>
                   <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-200">
                     What makes it strong
                   </h3>
                   <ul className="mt-3 space-y-3 text-sm text-slate-200">
-                    <li className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                      Multi-role marketplace model connecting customers and
-                      freight drivers.
+                    <li className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                      Multi-role marketplace connecting customers and drivers.
                     </li>
-                    <li className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                      Secure JWT authentication and role-based access control
-                      for sensitive flows.
+                    <li className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                      Secure JWT authentication with RBAC.
                     </li>
-                    <li className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                      Escrow-based payment release after delivery completion.
+                    <li className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                      Escrow-based payment release after delivery.
                     </li>
                   </ul>
                 </div>
@@ -146,17 +159,14 @@ export default function FeaturedProject() {
                     Business + technical depth
                   </h3>
                   <ul className="mt-3 space-y-3 text-sm text-slate-200">
-                    <li className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                      Dynamic freight pricing using vehicle type, weight,
-                      distance, fragility, and insurance.
+                    <li className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                      Dynamic pricing based on logistics variables.
                     </li>
-                    <li className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                      Driver wallets, withdrawals, balances, and admin revenue
-                      dashboards.
+                    <li className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                      Driver wallets and admin financial dashboards.
                     </li>
-                    <li className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                      Production-style stack with Next.js, Express, PostgreSQL,
-                      Stripe, PayPal, AWS SES, and Vercel.
+                    <li className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                      Production stack with cloud + payments integration.
                     </li>
                   </ul>
                 </div>
@@ -165,9 +175,10 @@ export default function FeaturedProject() {
 
             {/* RIGHT */}
             <div className="flex h-full flex-col gap-5">
-              <div className="relative flex-1 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+              <div className="relative flex-1 overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
                 <HeavyMoveLiveStats />
 
+                {/* Floating cards */}
                 <div className="pointer-events-none absolute -right-2 top-6 hidden w-44 rounded-2xl border border-orange-300/20 bg-orange-400/10 p-4 backdrop-blur-md md:block">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-orange-200">
                     Pricing Logic
@@ -187,7 +198,8 @@ export default function FeaturedProject() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+              {/* Tech stack */}
+              <div className="rounded-3xl border border-white/10 bg-white/10 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
                   Tech Stack
                 </h3>
@@ -207,7 +219,7 @@ export default function FeaturedProject() {
                   ].map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-100"
+                      className="rounded-full border border-white/10 bg-black/30 px-3 py-2 text-xs text-slate-100"
                     >
                       {item}
                     </span>

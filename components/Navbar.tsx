@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { HiMenu, HiX } from "react-icons/hi";
 
 const navItems = [
@@ -18,79 +18,120 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all ${
-        scrolled
-          ? "bg-slate-900/90 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
-      }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8 }}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.7 }}
+      className="fixed left-0 top-0 z-50 w-full"
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-20 h-16">
-        {/* LOGO */}
-        <a
-          href="#home"
-          className="text-2xl font-bold text-indigo-400 tracking-tight"
+      <div className="mx-auto w-full max-w-[1600px] px-3 md:px-6 lg:px-8 pt-3">
+        <div
+          className={`transition-all duration-300 ${
+            scrolled
+              ? "rounded-2xl border border-white/10 bg-slate-950/70 shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+              : "rounded-2xl border border-transparent bg-transparent"
+          }`}
         >
-          Junior N.
-        </a>
+          <div className="flex h-16 items-center justify-between px-4 md:px-6">
+            {/* LOGO */}
+            <a
+              href="#home"
+              className="group flex items-center gap-3"
+              onClick={() => setMobileOpen(false)}
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-sm font-bold text-white shadow-[0_0_30px_rgba(59,130,246,0.12)] backdrop-blur-md">
+                JN
+              </div>
 
-        {/* DESKTOP MENU */}
-        <ul className="hidden md:flex gap-8 text-white font-medium">
-          {navItems.map((item) => (
-            <li key={item.name}>
+              <div className="leading-tight">
+                <p className="text-sm font-semibold tracking-wide text-white">
+                  Junior Noundou
+                </p>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-slate-400">
+                  Full-Stack Engineer
+                </p>
+              </div>
+            </a>
+
+            {/* DESKTOP MENU */}
+            <ul className="hidden items-center gap-2 md:flex">
+              {navItems.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    className="group relative inline-flex items-center rounded-xl px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/5 hover:text-white"
+                  >
+                    {item.name}
+                    <span className="absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-gradient-to-r from-blue-400 to-orange-400 transition-transform duration-300 group-hover:scale-x-100" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* RIGHT CTA + MOBILE BUTTON */}
+            <div className="flex items-center gap-3">
               <a
-                href={item.href}
-                className="relative hover:text-indigo-400 transition-colors duration-300"
+                href="#contact"
+                className="hidden rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-400 md:inline-flex"
               >
-                {item.name}
-                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-400 transition-all group-hover:w-full"></span>
+                Let’s Talk
               </a>
-            </li>
-          ))}
-        </ul>
 
-        {/* MOBILE MENU BUTTON */}
-        <div className="md:hidden">
-          <button onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? (
-              <HiX size={28} className="text-white" />
-            ) : (
-              <HiMenu size={28} className="text-white" />
+              <button
+                type="button"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMobileOpen((prev) => !prev)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white backdrop-blur-md transition hover:bg-white/10 md:hidden"
+              >
+                {mobileOpen ? <HiX size={22} /> : <HiMenu size={22} />}
+              </button>
+            </div>
+          </div>
+
+          {/* MOBILE MENU */}
+          <AnimatePresence>
+            {mobileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25 }}
+                className="border-t border-white/10 bg-slate-950/90 px-4 py-4 backdrop-blur-xl md:hidden"
+              >
+                <ul className="flex flex-col gap-2">
+                  {navItems.map((item) => (
+                    <li key={item.name}>
+                      <a
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-200 transition hover:bg-white/5 hover:text-white"
+                      >
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+
+                  <li className="pt-2">
+                    <a
+                      href="#contact"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-center rounded-xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-400"
+                    >
+                      Let’s Talk
+                    </a>
+                  </li>
+                </ul>
+              </motion.div>
             )}
-          </button>
+          </AnimatePresence>
         </div>
       </div>
-
-      {/* MOBILE MENU */}
-      {mobileOpen && (
-        <motion.ul
-          className="md:hidden bg-slate-900 text-white flex flex-col gap-6 px-6 py-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {navItems.map((item) => (
-            <li key={item.name}>
-              <a
-                href={item.href}
-                className="block text-lg font-medium hover:text-indigo-400 transition-colors duration-300"
-                onClick={() => setMobileOpen(false)}
-              >
-                {item.name}
-              </a>
-            </li>
-          ))}
-        </motion.ul>
-      )}
     </motion.nav>
   );
 }
